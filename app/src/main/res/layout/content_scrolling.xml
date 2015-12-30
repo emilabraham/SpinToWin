@@ -12,12 +12,11 @@
     tools:context="com.emilabraham.spintowin.MainActivity">
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/play_game"/>
-
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/high_scores"/>
 </LinearLayout>
