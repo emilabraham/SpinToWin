@@ -1,7 +1,12 @@
 package com.emilabraham.spintowin;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PlayGameActivity extends AppCompatActivity {
+    private SensorManager mSensorManager;
+    private Sensor gyro;
+    private Sensor rotvec;
+    private MyListener mListener;
 
 
     @Override
@@ -28,12 +37,31 @@ public class PlayGameActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        rotvec = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        mListener = new MyListener();
+
         TextView textView = new TextView(this);
         textView.setTextSize(40);
         textView.setText("This is the game!");
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.content);
         layout.addView(textView);
+    }
+
+    @Override
+    protected void onResume() {
+        //When activity starts or regains focus, start the listener
+        super.onResume();
+        mListener.start();
+    }
+
+    @Override
+    protected void onPause() {
+        //When the activity stops or loses focus, stop the listener
+        super.onPause();
+        mListener.stop();
     }
 
     @Override
@@ -62,5 +90,35 @@ public class PlayGameActivity extends AppCompatActivity {
             return rootView;
         }
     }*/
+
+    class MyListener implements SensorEventListener {
+        private Sensor mRotationVectorSensor;
+
+        public MyListener() {
+            mRotationVectorSensor= mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        }
+
+        public void start() {
+            //enable listener when activity is resumed or started, asking for 10millisecond updates
+            mSensorManager.registerListener(this, mRotationVectorSensor, 10000);
+        }
+
+        public void stop() {
+            //disable listener when activity is stopped
+            mSensorManager.unregisterListener(this);
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                System.out.println("Hello World!");
+                System.out.println(event.values);
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    }
 
 }
