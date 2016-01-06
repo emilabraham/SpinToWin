@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class PlayGameActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private Sensor gyro;
@@ -42,12 +44,11 @@ public class PlayGameActivity extends AppCompatActivity {
         rotvec = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         mListener = new MyListener();
 
-        TextView textView = new TextView(this);
+        TextView textView = (TextView) findViewById(R.id.zaxis);
         textView.setTextSize(40);
-        textView.setText("This is the game!");
 
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.content);
-        layout.addView(textView);
+        //sets textView to be zaxis value as a string
+        textView.setText(String.format("%f", mListener.printValue()));
     }
 
     @Override
@@ -93,6 +94,8 @@ public class PlayGameActivity extends AppCompatActivity {
 
     class MyListener implements SensorEventListener {
         private Sensor mRotationVectorSensor;
+        //The value of the zaxis
+        public float zaxis = 0;
 
         public MyListener() {
             mRotationVectorSensor= mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
@@ -106,6 +109,9 @@ public class PlayGameActivity extends AppCompatActivity {
         public void stop() {
             //disable listener when activity is stopped
             mSensorManager.unregisterListener(this);
+        }
+        public float printValue() {
+            return zaxis;
         }
 
         @Override
@@ -125,7 +131,9 @@ public class PlayGameActivity extends AppCompatActivity {
                 //Changes if you were to throw the phone like a frisbee. Regardless if parallel or
                 //not to the ground.
                 //I'm pretty sure z-axis is what I want.
-                System.out.println("Z: " + event.values[2]);
+                //update the zaxis value
+                zaxis = event.values[2];
+                System.out.println("Z: " + zaxis);
             }
         }
 
