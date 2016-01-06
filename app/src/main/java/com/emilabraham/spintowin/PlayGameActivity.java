@@ -99,8 +99,8 @@ public class PlayGameActivity extends AppCompatActivity {
         }
 
         public void start() {
-            //enable listener when activity is resumed or started, asking for 10millisecond updates
-            mSensorManager.registerListener(this, mRotationVectorSensor, 10000);
+            //enable listener when activity is resumed or started, asking for 10 millisecond updates
+            mSensorManager.registerListener(this, mRotationVectorSensor, 100000000);
         }
 
         public void stop() {
@@ -111,8 +111,21 @@ public class PlayGameActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-                System.out.println("Hello World!");
-                System.out.println(event.values);
+                //values are from -1 to 1
+
+                //X is 0 with parallel to ground, face up.
+                //X is 1 when parallel to ground, face down.
+                //System.out.println("X: " + event.values[0]);
+
+                //Y shifts around -1 to 1 when you hold the phone parallel to your face, vertically
+                //and turn it like a top. So rotate it in an axis parallel to ground.
+                //The 1 and 0 and -1 values are hard to pinpoint.
+                //System.out.println("Y: " + event.values[1]);
+
+                //Changes if you were to throw the phone like a frisbee. Regardless if parallel or
+                //not to the ground.
+                //I'm pretty sure z-axis is what I want.
+                System.out.println("Z: " + event.values[2]);
             }
         }
 
