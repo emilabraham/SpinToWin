@@ -134,6 +134,9 @@ public class PlayGameActivity extends AppCompatActivity {
                 //update the zaxis value
                 zaxis = event.values[2];
                 System.out.println("Z: " + zaxis);
+                TextView textView = (TextView) findViewById(R.id.zaxis);
+                textView.setText(String.format("%f", printValue()));
+
             }
         }
 
